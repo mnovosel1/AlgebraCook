@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Recipe;
+use App\Ingredient;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -23,13 +24,30 @@ class RecipesController extends Controller
 
     public function add()
     {
-        return "Prikaz view-a sa web obrascem za unos.";
+        return view('add');
+		//return "Prikaz view-a sa web obrascem za unos.";
     }
 	
 	public function save(Request $request)
 	{
-        // $request->nameInputa = vrijednostInputa
-		return "Spremam podatke iz webobrasca u bazu";
+        $data = $request->all();
+		$noviRecept = new Recipe;
+		$noviRecept->name = $data['name'];
+		$noviRecept->creator_id = 1;
+		$noviRecept->description = $data['opis'];
+		
+		if ( $noviRecept->save() ) {
+		
+			foreach($data['ingredient'] as $key => $value) {
+				
+				$sastojak = new Ingredient;
+				$sastojak->name = $value;
+				$sastojak->recipe_id = $noviRecept->id;
+				$sastojak->save();
+			}
+		}
+		
+		return redirect()->action('RecipesController@index');
 	}
 
     /**
@@ -40,7 +58,7 @@ class RecipesController extends Controller
      */
     public function view($id)
     {
-        return "Prikaz recpta ID: " . $id;
+        return view('view')->with('recipe', Recipe::find($id));
     }
 
     /**
