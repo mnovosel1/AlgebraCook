@@ -20,7 +20,7 @@
 							<textarea id="opis" name="opis" class="form-control">{{ $recipe->description }}</textarea>
 						</div>
 						<h3>Popis sastojaka</h3>
-						<div class="ing-coll-fields">
+						<div id="ing-coll-fields">
 						@foreach ($recipe->ingredients as $ingredient)
 							<div class="form-group">
 								<label for="ingredient">Sastojak: 
@@ -48,7 +48,7 @@
         var scntDiv = $('#ing-coll-fields');
         var i = $('#ing-coll-fields div').size() + 1;
         
-        $('#addLnk').click(function() {
+        $('#addLink').click(function() {
                 $('<div class="form-group">'+
                 	'<label for="ingredient">Sastojak: <input name="ingredient[]" type="text"/></label>'+
                     '<a href="#" class="remScnt">'+
