@@ -69,7 +69,7 @@ class RecipesController extends Controller
      */
     public function edit($id)
     {
-        return "Promjena recepta sa ID: " . $id; // Prikaz web obrasca
+        return view('edit')->with('recipe', Recipe::find($id));
     }
 
     /**
@@ -79,9 +79,9 @@ class RecipesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        return "Spremanje promjena recepta ID: " . $id;
+        return "Spremanje promjena recepta";
     }
 
     /**
