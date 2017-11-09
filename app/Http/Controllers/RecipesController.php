@@ -11,6 +11,11 @@ use App\Http\Controllers\Controller;
 
 class RecipesController extends Controller
 {
+	
+	public function __construct() {
+		$this->middleware('auth');
+	}
+	
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +23,7 @@ class RecipesController extends Controller
      */
     public function index()
     {
-        return view('index', ['recipes' => Recipe::get()]);
+        return view('index', array('recipes' => Recipe::get()));
     }
 
 
@@ -33,7 +38,7 @@ class RecipesController extends Controller
         $data = $request->all();
 		$noviRecept = new Recipe;
 		$noviRecept->name = $data['name'];
-		$noviRecept->creator_id = 1;
+		$noviRecept->creator_id = auth()->user()->id;
 		$noviRecept->description = $data['opis'];
 		
 		if ( $noviRecept->save() ) {
@@ -69,7 +74,12 @@ class RecipesController extends Controller
      */
     public function edit($id)
     {
-        return view('edit')->with('recipe', Recipe::find($id));
+		$recipe = Recipe::find($id);
+		
+		if ( $recipe->creator_id !== auth()->user()->id )
+			return redirect()->action("RecipesController@index");
+		
+        return view('edit')->with('recipe', $recipe);
     }
 
     /**
@@ -111,6 +121,34 @@ class RecipesController extends Controller
      */
     public function delete($id)
     {
-        return "Brisanje recepta ID: " . $id;
+		Recipe::find($id)->delete();
+		return redirect()->action('RecipesController@index');
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
